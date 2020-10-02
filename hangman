@@ -1,0 +1,112 @@
+import java.util.*;
+class hangman
+{
+    String words[]={"wrist","charm","thought","extract","child","continuation","lovely","clear","joker","source",
+                    "bill","dump","landowner","despair","social","alcohol","authority","teak","ginger","water"};
+    Scanner inp = new Scanner(System.in);
+    int l;
+    char wordChar[];
+    String Word,guessed=" ";
+    
+    void mainCall()
+    {
+        System.out.print("\f");
+        System.out.println("The game is simple. the number of '-'s tells you the number of letters in the word.");
+        System.out.println("Every correct guess will place the letter in its correct position.");
+        System.out.println("You start off with the typical 7 lives. you lose one life for every incorrect guess.");
+        System.out.println("Game terminates when you've either lost all lives or correctly guessed the word");
+        System.out.println("Happy playing!\n");
+        extraxtWord();
+        gamePlay();
+        
+        System.out.print("\nDo you want to play another game? (y/n): ");
+        char ans= inp.next().charAt(0);
+        Menu m=new Menu();
+        if(ans == 'y')
+           m.call();
+        else
+           m.thankYou();
+    }
+    
+    void extraxtWord()
+    {
+        Random rdm=new Random();
+        int wordI=rdm.nextInt(20);
+        Word= words[wordI];
+        l= Word.length();
+        wordChar = new char[l];
+        for(int i=0 ; i<l ; i++)
+        {
+            wordChar[i]= Word.charAt(i);
+            System.out.print("- ");
+        }
+        System.out.println("\n");
+        //System.out.println(Word);
+    }
+    
+    char input()
+    {
+        System.out.print("guess : a-z [use no capital letters]: ");
+        char guess=inp.next().charAt(0);
+        if((guess < 'a') || (guess > 'z'))
+        {   
+            System.out.println("Incorrect input.");
+            input();
+        }
+        return guess;
+    }
+    
+    boolean inGuessed(char c)
+    {
+        int a=0;
+        for(; a<guessed.length() ; a++)
+            if(c == guessed.charAt(a))
+                break;
+        return (a == guessed.length()) ? false : true; 
+    }
+    
+    boolean inWord(char c)
+    {
+        int b=0;
+        for( ; b<l ; b++)
+            if(c == wordChar[b])
+                break;
+        return (b == l) ? false : true; 
+    }
+    
+    void gamePlay()
+    {
+        char correct[]=new char[l];
+        for(int k=0 ; k<l ; k++)
+            correct[k]='-';
+        int lives=7;
+        String wordC = Word.toUpperCase(); //copy to print correct word if player loses
+        while((Word.length() > 0) && lives > 0)
+        {
+            char ch=input();
+            if(!(inGuessed(ch))) 
+            {
+                guessed+=ch+" ";
+                if(inWord(ch))
+                    Word = Word.replace(ch+"","");
+                else
+                    lives--;
+                    
+                //display guessed letters
+                System.out.println("Guessed letters: "+guessed+"");
+            
+                //display word with correctly guessed letters in place
+                for(int j=0 ; j<l ; j++)
+                    if(wordChar[j]==ch)
+                        correct[j]=ch;
+                for(int i=0 ; i<l ; i++)
+                    System.out.print(correct[i]+" ");
+            
+                System.out.println("\nLives: "+lives+"\n\n");
+            }
+            else
+                System.out.println("\nYou've gueesed the same already\n");
+        }
+        System.out.print((lives==0)? "The word was "+wordC+"\nDead. man, hanged\n" : "Congratulations! You saved the man!\n");
+    }
+}
