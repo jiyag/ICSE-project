@@ -1,0 +1,61 @@
+
+import java.util.*;
+class Menu
+{
+    Scanner sc = new Scanner(System.in);
+    int ch;
+    
+    public static void main(String args[])
+    {
+        System.out.print("\f");
+        Menu m = new Menu();
+        m.call();
+    }
+    
+    void call()
+    {
+        do
+        {
+            System.out.println("\fWELCOME TO YOUR NEW PLAY STATION!");
+            System.out.println("WHAT WOULD YOU LIKE TO PLAY?");
+            System.out.println("\n1.Tic tac toe with the computer (SP)");
+            System.out.println("2.Tic tac toe with a friend (MP)");
+            System.out.println("3.Odd square (MP)");
+            System.out.println("4.Hangman (SP)");
+            System.out.println("5.Nim (MP)");
+            System.out.println("\n\t\tEnter any number above 5 to exit.");
+            System.out.println("\n\nPlease enter your choice: ");
+            ch=sc.nextInt();
+            switch(ch)
+            {
+                case 1 : System.out.print("\f");
+                         TTTsp tS = new TTTsp();
+                         tS.mainCall();
+                         break;
+                case 2 : System.out.print("\f");
+                         TTTmp tM = new TTTmp();
+                         tM.mainCall();
+                         break;
+                case 3 : System.out.print("\f");
+                         oddSquare oS = new oddSquare();
+                         oS.mainCall();
+                         break;
+                case 4 : System.out.print("\f");
+                         hangman hM = new hangman();
+                         hM.mainCall();
+                         break;
+                case 5 : System.out.print("\f");
+                         nim n = new nim();
+                         n.mainCall();
+                         break;
+            }
+        }while(ch<6);
+        thankYou();
+    }
+    
+    void thankYou()
+    {
+        System.out.println("\fThank you for trying out my Project.");
+        System.exit(0);
+    }
+}
