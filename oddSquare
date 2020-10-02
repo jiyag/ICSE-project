@@ -1,0 +1,174 @@
+import java.util.*;
+class oddSquare
+{
+    int scores[]={0,0};
+    int a,b,player;//a for marble index 1 and b for marble index 2
+    char GB[]=new char[25];
+    String ch,p1,p2;
+    Scanner inp=new Scanner(System.in);
+
+    void mainCall()
+    {
+        System.out.print("\f");
+        System.out.println("The game is simple. you see a 5x5 grid of 'O's (representing marbles)");
+        System.out.println("and a grid indicating the position for each marble");
+        System.out.println("Players in their turn must take away a marble from the board");
+        System.out.println("If a player wishes to take two, they may only take adjacent marbles.");
+        System.out.println("Your input must look like this: 2 9  (if you wish to take a second marble)");
+        System.out.println("The game's over when the game board is empty.");
+        System.out.println("The winner is the player with odd number of marbles at the end.");
+        System.out.println("The scores will be displayed at the end so be careful!");
+        System.out.println("Happy playing!\n");
+        displayGB();
+        gamePlay();
+    }
+    
+    void displayGB()
+    {
+        inp.useDelimiter("\n");
+        System.out.println("Names:");
+        System.out.print("Player 1: ");
+        p1=inp.next();
+        System.out.print("Player 2: ");
+        p2=inp.next();
+        
+        for(int y=1 ; y<=25 ; y++)
+        {
+            System.out.print(y+"\t");
+            if(y%5==0)
+                System.out.println();
+        }
+        System.out.println();
+        
+        for(int z=1 ; z<=25 ; z++)
+        {
+            System.out.print("O\t");
+            if(z%5==0)
+                System.out.println();
+            GB[z-1]='O';
+        }
+        System.out.println();
+    }
+    
+    void gamePlay()
+    {
+        for(int i=0 ; i<25 ; i++)
+        {
+            player=(i%2==0)? 1 : 2;
+            input();
+            if(isGBempty())
+                break;
+        }
+        System.out.println(p1+"'s marbles: "+scores[0]);
+        System.out.println(p2+"'s marble: "+scores[1]);
+        System.out.println((scores[0]%2 == 0)?p2+" has won!" : p1+" has won!");
+        
+        System.out.print("\nDo you want to play another game? (y/n): ");
+        char ans= inp.next().charAt(0);
+        Menu m=new Menu();
+        if(ans == 'y')
+           m.call();
+        else
+           m.thankYou();
+    }
+    
+    void input()
+    {
+        System.out.print((player==1)? (p1+", Your Choice: ") : (p2+", Your Choice: "));
+        ch=inp.next().trim();
+        System.out.println();
+        assignAB();
+    }
+    
+    void assignAB()
+    {
+        if(ch.length() > 2 && ch.length() < 5)
+        {
+            if(ch.charAt(1) == ' ')
+            {   
+                a=Integer.parseInt(ch.charAt(0)+"");
+                b=Integer.parseInt(ch.substring(2));
+            }
+            else if(ch.charAt(2) == ' ')
+            {   
+                a=Integer.parseInt(ch.substring(0,2));
+                b=Integer.parseInt(ch.substring(3));
+            }
+            calcScore2();
+        }
+        
+        else if(ch.length() == 5)
+        {
+            a=Integer.parseInt(ch.substring(0,2));
+            b=Integer.parseInt(ch.substring(3));
+            calcScore2();
+        }
+        
+        else if(ch.length() < 3) 
+        {
+            a=Integer.parseInt(ch);
+            calcScore1();
+        }
+    }
+    
+    void calcScore1()
+    {
+        if((GB[a-1] == 'X') || ((b > 0) && (GB[b-1] == 'X')))
+        {
+            System.out.println("Marble(s) has been taken already please input again\n");
+            a=0;
+            b=0;
+            input();
+        }
+        
+        if(ch.length() < 3 && GB[a-1] != 'X') 
+        {
+            GB[a-1]='X';
+            scores[player-1]++;
+        }
+    }
+    
+    void calcScore2()
+    {
+        if((GB[a-1] == 'X') || ((b > 0) && (GB[b-1] == 'X')))
+        {
+            System.out.println("Marble(s) has been taken already please input again\n");
+            a=0;
+            b=0;
+            input();
+        }
+        
+        if(a-1 == b || b-1 == a || a-5 == b || b-5 == a)
+        {
+            if(b != 0)
+            {
+                scores[player-1]+=2;
+                GB[a-1]='X';
+                GB[b-1]='X';
+                b=0;
+            }
+        }
+        else 
+        {
+            System.out.println("Pieces not adjacent please input again.\n");
+            a=0;
+            b=0;
+            input();
+        }
+    }
+    
+    boolean isGBempty()
+    {
+        int check=0;
+        for(int j=1 ; j<=25 ; j++)
+        {
+            System.out.print(GB[j-1]+"\t");
+            if(j%5==0)
+                System.out.println();
+            if(GB[j-1]=='X')
+                check++;
+        }
+        System.out.println();
+        return (check==25)? true : false;
+    }
+}
